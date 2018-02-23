@@ -1,5 +1,6 @@
 from socket import *
 from threading import Thread
+import json
 
 host = 'localhost'
 port = 1234
@@ -10,7 +11,7 @@ def Listener():
     try:
         while True:
             data = s.recv(1024).decode('utf-8')
-            print('', data)
+            print('incoming message:', data)
     except ConnectionAbortedError:
         pass
 
@@ -20,8 +21,10 @@ t.start()
 
 try:
     while True:
-        message = input('')
-        s.send(message.encode('utf-8'))
+        to = input('to: ')
+        msg = input('msg: ')
+        data = json.dumps({'to':to,'msg':msg})
+        s.send(data.encode('utf-8'))
 except EOFError:
     pass
 finally:

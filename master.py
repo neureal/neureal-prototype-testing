@@ -1,5 +1,6 @@
 from socket import socket, SO_REUSEADDR, SOL_SOCKET
 from asyncio import Task, coroutine, get_event_loop
+import json
 
 class Peer(object):
     def __init__(self, server, sock, name):
@@ -25,9 +26,19 @@ class Peer(object):
     def _peer_loop(self):
         while True:
             buf = yield from self.loop.sock_recv(self._sock, 1024)
+            buff = buf.decode('utf8')
+            buff_hash = json.loads(buff)
             if buf == b'':
                 break
-            self._server.broadcast('%s: %s' % (self.name, buf.decode('utf8')))
+            elif buff_hash['to'] == 'server' and buff_hash['msg'] == 'shutdown':
+                exit()
+            elif buff_hash['to'] == 'all':
+                self._server.broadcast('%s: %s' % (self.name, buf.decode('utf8')))
+            else:
+                print('from:',self.name,
+                      'msg:', buff_hash['msg'],
+                      'to:', buff_hash['to'])
+                self._server.send_direct(buff_hash['msg'], buff_hash['to'])
 
 class Server(object):
     def __init__(self, loop, port):
@@ -47,6 +58,11 @@ class Server(object):
     def broadcast(self, message):
         for peer in self._peers:
             peer.send(message)
+
+    def send_direct(self, message, recipient):
+        for peer in self._peers:
+            if recipient in str(peer.name):
+                peer.send(message)
 
     @coroutine
     def _server(self):
