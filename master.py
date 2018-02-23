@@ -26,19 +26,20 @@ class Peer(object):
     def _peer_loop(self):
         while True:
             buf = yield from self.loop.sock_recv(self._sock, 1024)
-            buff = buf.decode('utf8')
-            buff_hash = json.loads(buff)
-            if buf == b'':
-                break
-            elif buff_hash['to'] == 'server' and buff_hash['msg'] == 'shutdown':
-                exit()
-            elif buff_hash['to'] == 'all':
-                self._server.broadcast('%s: %s' % (self.name, buf.decode('utf8')))
-            else:
-                print('from:',self.name,
-                      'msg:', buff_hash['msg'],
-                      'to:', buff_hash['to'])
-                self._server.send_direct(buff_hash['msg'], buff_hash['to'])
+            interpret_recv(buf):
+
+    def interpret_recv(buf):
+        buff_hash = json.loads(buf.decode('utf8'))
+        if buf == b'':
+            break
+        elif buff_hash['to'] == 'server' and buff_hash['msg'] == 'shutdown':
+            exit()
+        elif buff_hash['to'] == 'all':
+            self._server.broadcast('%s: %s' % (self.name, buf.decode('utf8')))
+        else:
+            print('from:',self.name, 'msg:', buff_hash['msg'], 'to:', buff_hash['to'])
+            self._server.send_direct(buff_hash['msg'], buff_hash['to'])
+
 
 class Server(object):
     def __init__(self, loop, port):

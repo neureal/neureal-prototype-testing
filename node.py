@@ -19,10 +19,15 @@ def Listener():
 t = Thread(target=Listener)
 t.start()
 
+def get_input():
+    to = input('to: ')
+    msg = input('msg: ')
+    return to, msg
+
+
 try:
     while True:
-        to = input('to: ')
-        msg = input('msg: ')
+        to, msg = get_input()
         data = json.dumps({'to':to,'msg':msg})
         s.send(data.encode('utf-8'))
 except EOFError:
