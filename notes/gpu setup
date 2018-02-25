@@ -21,6 +21,8 @@ conda install theano
 conda install mingw libpython
 conda list theano
 pip install keras —upgrade
+pip install opencv-python
+pip install mxnet 
 
 5. test that keras is working the
 python -c "from keras import backend; print(backend._BACKEND)"
