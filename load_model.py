@@ -76,10 +76,13 @@ class ImagenetModel(object):
 
         # Switch RGB to BGR format (which ImageNet networks take)
         #img = cv2.cvtColor(cv2.imread(filename), cv2.COLOR_BGR2RGB)  # causes crash
+        print(filename)
         img = cv2.imread(filename)
         if img is None:
+            print('no image')
             return topN
 
+        print('images...')
         # Resize image to fit network input
         img = cv2.resize(img, reshape)
         img = np.swapaxes(img, 0, 2)
