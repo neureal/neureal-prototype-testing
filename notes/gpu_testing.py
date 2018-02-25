@@ -20,5 +20,5 @@ def test_gpu():
     # Runs the op.
     print(sess.run(c))
 
-test_cpu()
+test_gpu()
 print(tf.device())
