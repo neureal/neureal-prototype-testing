@@ -1,6 +1,15 @@
 from socket import *
 from threading import Thread
 import json
+import load_model
+
+def use_model():
+    print(  load_model.ImagenetModel(   'synset.txt',
+                                        'squeezenet_v1.1',
+                                        params_url='http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-0000.params',
+                                        symbol_url='http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-symbol.json',
+                                        synset_url='http://data.mxnet.io/models/imagenet/synset.txt'
+                                    ).predict_from_file('cat.jpg')  )
 
 host = 'localhost'
 port = 1234
@@ -12,6 +21,7 @@ def Listener():
         while True:
             data = s.recv(1024).decode('utf-8')
             print('incoming message:', data)
+            # Here we need to do something based on the data we get (like use_model)
     except ConnectionAbortedError:
         pass
 

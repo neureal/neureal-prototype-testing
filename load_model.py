@@ -10,15 +10,23 @@
 # see nodes/gpu setup for more.
 
 
-# python2   load_model.py
-#            --img 'cat.jpg'
-#            --prefix 'squeezenet_v1.1'
-#            --synset 'synset.txt'
-#            --params-url http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-0000.params
-#            --symbol-url http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-symbol.json
-#            --synset-url http://data.mxnet.io/models/imagenet/synset.txt
+# Command Line
+# python   load_model.py --img cat.jpg --prefix squeezenet_v1.1 --synset synset.txt --params-url http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-0000.params --symbol-url http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-symbol.json --synset-url http://data.mxnet.io/models/imagenet/synset.txt
+# python   load_model.py    --img           cat.jpg
+#                           --prefix        squeezenet_v1.1
+#                           --synset        synset.txt
+#                           --params-url    http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-0000.params
+#                           --symbol-url    http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-symbol.json
+#                           --synset-url    http://data.mxnet.io/models/imagenet/synset.txt
 
-# python   load_model.py              --img 'cat.jpg'              --prefix 'squeezenet_v1.1'              --synset 'synset.txt'              --params-url http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-0000.params             --symbol-url http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-symbol.json             --synset-url http://data.mxnet.io/models/imagenet/synset.txt
+# imported
+# load_model.ImagenetModel( synset='synset.txt',
+#                           prefix='squeezenet_v1.1',
+#                           label_names='',
+#                           params_url='http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-0000.params',
+#                           symbol_url='http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-symbol.json',
+#                           synset_url='http://data.mxnet.io/models/imagenet/synset.txt'
+#                           ).predict_from_file('cat.jpg')
 
 import mxnet as mx
 import numpy as np
