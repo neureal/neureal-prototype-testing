@@ -12,7 +12,8 @@
 
 import mxnet as mx
 import numpy as np
-import cv2, os, urllib2, argparse, time
+import cv2, os, argparse, time
+from urllib.request import urlopen
 from collections import namedtuple
 Batch = namedtuple('Batch', ['data'])
 
@@ -27,19 +28,19 @@ class ImagenetModel(object):
         # Download the symbol set and network if URLs are provided
         if params_url is not None:
             print("fetching params from "+params_url)
-            fetched_file = urllib2.urlopen(params_url)
+            fetched_file = urlopen(params_url)
             with open(network_prefix+"-0000.params",'wb') as output:
                 output.write(fetched_file.read())
 
         if symbol_url is not None:
             print("fetching symbols from "+symbol_url)
-            fetched_file = urllib2.urlopen(symbol_url)
+            fetched_file = urlopen(symbol_url)
             with open(network_prefix+"-symbol.json",'wb') as output:
                 output.write(fetched_file.read())
 
         if synset_url is not None:
             print("fetching synset from "+synset_url)
-            fetched_file = urllib2.urlopen(synset_url)
+            fetched_file = urlopen(synset_url)
             with open(synset_path,'wb') as output:
                 output.write(fetched_file.read())
 

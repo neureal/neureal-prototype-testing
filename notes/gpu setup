@@ -1,18 +1,32 @@
 http://ufldl.stanford.edu/tutorial/unsupervised/Autoencoders/
 
+1. get and setup tensorflow:
 
-conda install opencv
+pip install tensorflow-gpu —upgrade
+download CUDA 9.0
+download cuDNN for CUDA 9.0 and put files from cuDNN download in the CUDA 9.0 folders.
+
+2. make sure your path variable is correct
+C:\ProgramData\Anaconda3
+C:\ProgramData\Anaconda3\Library\bin
+C:\ProgramData\Anaconda3\Scripts
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.0\bin
+
+3. get other immediately needed packages
 pip install mxnet-cu90
+conda install opencv
 
+4. feel free to get other useful nn packages
 conda install theano
 conda install mingw libpython
 conda list theano
-
-pip install tensorflow-gpu —upgrade
-
 pip install keras —upgrade
 
+5. test that keras is working the
 python -c "from keras import backend; print(backend._BACKEND)"
+
+6. test tensor flow
+##gpu_testing.py
 import tensorflow as tf
 
 # Creates a graph.

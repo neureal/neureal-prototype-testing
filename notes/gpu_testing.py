@@ -18,7 +18,7 @@ def test_gpu():
     # Creates a session with log_device_placement set to True.
     sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
     # Runs the op.
-    print(sess.run(c))
+    print("SESS",sess.run(c))
 
 test_gpu()
-print(tf.device())
+#print(tf.device())
