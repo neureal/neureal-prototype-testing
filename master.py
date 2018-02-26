@@ -30,6 +30,7 @@ class Peer(object):
             if buf == b'':
                 break
             elif buff_hash['to'] == 'server' and buff_hash['msg'] == 'shutdown':
+                self._server.broadcast('%s: %s' % (self.name, buf.decode('utf8')))
                 exit()
             elif buff_hash['to'] == 'all':
                 self._server.broadcast('%s: %s' % (self.name, buf.decode('utf8')))

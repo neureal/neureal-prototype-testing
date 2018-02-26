@@ -1,10 +1,11 @@
 from socket import *
 from threading import Thread
 import json
-import load_model
+import mxnet_model
 
 def use_model():
-    print(  load_model.ImagenetModel(   'synset.txt',
+    # demo connection to mxnet_model module, which holds all our MXNet capabilities.
+    print(  mxnet_model.ImagenetModel(  'synset.txt',
                                         'squeezenet_v1.1',
                                         params_url='http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-0000.params',
                                         symbol_url='http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-symbol.json',
@@ -16,17 +17,30 @@ port = 1234
 s = socket(AF_INET, SOCK_STREAM)
 s.connect((host, port))
 
-def Listener():
+def accept_data(data):
+    # TO DO:
+    # if data is weights:
+    #   sends weights to model ()
+    # if data is request of weights:
+    #   get weights of model ()
+    # else: demo:
+    if 'model' in data:
+        use_model()
+    elif 'shutdown' in data:
+        exit()
+
+
+def listener():
     try:
         while True:
             data = s.recv(1024).decode('utf-8')
             print('incoming message:', data)
-            # Here we need to do something based on the data we get (like use_model)
+            accept_data(data)
     except ConnectionAbortedError:
         pass
 
 
-t = Thread(target=Listener)
+t = Thread(target=listener)
 t.start()
 
 def get_input():

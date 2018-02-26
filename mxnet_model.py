@@ -1,5 +1,5 @@
 # You can run this scrypt using python2 like this:
-# python2 load_model.py --img 'cat.jpg' --prefix 'squeezenet_v1.1' --synset 'synset.txt' --params-url 'http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-0000.params' --symbol-url 'http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-symbol.json' --synset-url 'http://data.mxnet.io/models/imagenet/synset.txt'
+# python2 mxnet_model.py --img 'cat.jpg' --prefix 'squeezenet_v1.1' --synset 'synset.txt' --params-url 'http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-0000.params' --symbol-url 'http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-symbol.json' --synset-url 'http://data.mxnet.io/models/imagenet/synset.txt'
 #
 # You'll have some stuff to install:
 # python $(which pip) install opencv-python
@@ -11,8 +11,8 @@
 
 
 # Command Line
-# python   load_model.py --img cat.jpg --prefix squeezenet_v1.1 --synset synset.txt --params-url http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-0000.params --symbol-url http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-symbol.json --synset-url http://data.mxnet.io/models/imagenet/synset.txt
-# python   load_model.py    --img           cat.jpg
+# python   mxnet_model.py --img cat.jpg --prefix squeezenet_v1.1 --synset synset.txt --params-url http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-0000.params --symbol-url http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-symbol.json --synset-url http://data.mxnet.io/models/imagenet/synset.txt
+# python   mxnet_model.py    --img           cat.jpg
 #                           --prefix        squeezenet_v1.1
 #                           --synset        synset.txt
 #                           --params-url    http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-0000.params
@@ -20,7 +20,7 @@
 #                           --synset-url    http://data.mxnet.io/models/imagenet/synset.txt
 
 # imported
-# load_model.ImagenetModel( synset='synset.txt',
+# mxnet_model.ImagenetModel( synset='synset.txt',
 #                           prefix='squeezenet_v1.1',
 #                           label_names='',
 #                           params_url='http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-0000.params',
