@@ -12,7 +12,7 @@
 
 # Command Line
 # python   mxnet_model.py --img cat.jpg --prefix squeezenet_v1.1 --synset synset.txt --params-url http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-0000.params --symbol-url http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-symbol.json --synset-url http://data.mxnet.io/models/imagenet/synset.txt
-# python   mxnet_model.py    --img           cat.jpg
+# python   mxnet_model.py   --img           cat.jpg
 #                           --prefix        squeezenet_v1.1
 #                           --synset        synset.txt
 #                           --params-url    http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-0000.params
@@ -20,12 +20,12 @@
 #                           --synset-url    http://data.mxnet.io/models/imagenet/synset.txt
 
 # imported
-# mxnet_model.ImagenetModel( synset='synset.txt',
-#                           prefix='squeezenet_v1.1',
+# mxnet_model.ImagenetModel(synset='synset.txt',                                                                        # name of file of what the output means
+#                           prefix='squeezenet_v1.1',                                                                   # name of model
 #                           label_names='',
-#                           params_url='http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-0000.params',
-#                           symbol_url='http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-symbol.json',
-#                           synset_url='http://data.mxnet.io/models/imagenet/synset.txt'
+#                           params_url='http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-0000.params',   # the actual model itself
+#                           symbol_url='http://data.mxnet.io/models/imagenet/squeezenet/squeezenet_v1.1-symbol.json',   # nn structure
+#                           synset_url='http://data.mxnet.io/models/imagenet/synset.txt'                                # what the output means
 #                           ).predict_from_file('cat.jpg')
 
 import mxnet as mx
@@ -41,7 +41,7 @@ class ImagenetModel(object):
     """
     Loads a pre-trained model locally or from an external URL and returns an MXNet graph that is ready for prediction
     """
-    def __init__(self, synset_path, network_prefix, params_url=None, symbol_url=None, synset_url=None, context=mx.cpu(), label_names=['prob_label'], input_shapes=[('data', (1,3,224,224))]):
+    def __init__(self, synset_path, network_prefix, params_url=None, symbol_url=None, synset_url=None, context=mx.gpu(), label_names=['prob_label'], input_shapes=[('data', (1,3,224,224))]):
 
         # Download the symbol set and network if URLs are provided
         if params_url is not None:
@@ -71,9 +71,27 @@ class ImagenetModel(object):
 
         # Load the network into an MXNet module and bind the corresponding parameters
         self.mod = mx.mod.Module(symbol=sym, label_names=label_names, context=context)
-        self.mod.bind(for_training=False, data_shapes= input_shapes)
+        self.mod.bind(for_training=False, data_shapes=input_shapes) # for training you need a label in the data_shapes
         self.mod.set_params(arg_params, aux_params)
         self.camera = None
+
+        # learn the design of the symbol file, the structure of the networks.
+        # learn how to grab and modify the any layers of the model I want.
+        # states and weights.
+        # learn how to train a model, not just use a static model.
+        #
+        # make a new script that trains a network from scratch.
+        #   accept an initial network structure
+        #   accept weights
+        #       modifies network as per weights - average of the two
+        #   provides weights
+        #
+        # 3 ways of doing it:
+        #   Full, random/non-random subset, output (prediction)
+        #   get SLA stats for each.
+        #
+        # measure accuracy against squeezenet_v1.1 that mxnet trained.
+
 
     """
     Takes in an image, reshapes it, and runs it through the loaded MXNet graph for inference returning the N top labels from the softmax
@@ -83,9 +101,8 @@ class ImagenetModel(object):
         topN = []
 
         # Switch RGB to BGR format (which ImageNet networks take)
-        #img = cv2.cvtColor(cv2.imread(filename), cv2.COLOR_BGR2RGB)  # causes crash
-        print(filename)
-        img = cv2.imread(filename)
+        img = cv2.cvtColor(cv2.imread(filename), cv2.COLOR_BGR2RGB)
+
         if img is None:
             print('no image')
             return topN
@@ -127,14 +144,19 @@ class ImagenetModel(object):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="pull and load pre-trained resnet model to classify one image")
-    parser.add_argument('--img', type=str, default='cam', help='input image for classification, if this is cam it captures from the PiCamera')
-    parser.add_argument('--prefix', type=str, default='squeezenet_v1.1', help='the prefix of the pre-trained model')
-    parser.add_argument('--label-name', type=str, default='prob_label', help='the name of the last layer in the loaded network (usually softmax_label)')
-    parser.add_argument('--synset', type=str, default='synset.txt', help='the path of the synset for the model')
-    parser.add_argument('--params-url', type=str, default=None, help='the (optional) url to pull the network parameter file from')
-    parser.add_argument('--symbol-url', type=str, default=None, help='the (optional) url to pull the network symbol JSON from')
-    parser.add_argument('--synset-url', type=str, default=None, help='the (optional) url to pull the synset file from')
+    parser.add_argument('--img',        type=str, default='cam',                help='input image for classification, if this is cam it captures from the PiCamera')
+    parser.add_argument('--prefix',     type=str, default='squeezenet_v1.1',    help='the prefix of the pre-trained model')
+    parser.add_argument('--label-name', type=str, default='prob_label',         help='the name of the last layer in the loaded network (usually softmax_label)')
+    parser.add_argument('--synset',     type=str, default='synset.txt',         help='the path of the synset for the model')
+    parser.add_argument('--params-url', type=str, default=None,                 help='the (optional) url to pull the network parameter file from')
+    parser.add_argument('--symbol-url', type=str, default=None,                 help='the (optional) url to pull the network symbol JSON from')
+    parser.add_argument('--synset-url', type=str, default=None,                 help='the (optional) url to pull the synset file from')
     args = parser.parse_args()
-    mod = ImagenetModel(args.synset, args.prefix, label_names=[args.label_name], params_url=args.params_url, symbol_url=args.symbol_url, synset_url=args.synset_url)
+    mod = ImagenetModel(args.synset,
+                        args.prefix,
+                        label_names=[args.label_name],
+                        params_url=args.params_url,
+                        symbol_url=args.symbol_url,
+                        synset_url=args.synset_url)
     print("predicting on "+args.img)
     print(mod.predict_from_file(args.img))
